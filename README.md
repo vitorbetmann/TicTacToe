@@ -1,2 +1,2 @@
 # TicTacToe
-A Tic-Tac-Toe game to be played against an AI opponent
+A Tic-Tac-Toe game to be played on the terminal against an AI opponent
