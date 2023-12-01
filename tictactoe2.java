@@ -56,7 +56,7 @@ public class tictactoe2 {
 					draw = true;
 					break;
 				}
-				
+
 				if (round != 1) {
 					if (symb1 == 'X') {
 						symb2 = symb1;
@@ -106,7 +106,7 @@ public class tictactoe2 {
 					}
 				}
 
-				// if ai turn
+				// if AI turn
 				else {
 					aiPlay = aiPlay(board, symb1, symb2, round);
 					board[aiPlay[0]][aiPlay[1]] = symb1;
@@ -141,16 +141,9 @@ public class tictactoe2 {
 	public static int[] aiPlay(char[][] board, char symb1, char symb2, int round) {
 
 		int[] result = new int[2];
-		if (round == 1) {
-			result[0] = (int) Math.round(Math.random() * 2);
-			result[1] = (int) Math.round(Math.random() * 2);
-			return result;
-		}
-
-		int i, j = 0;
+		int i = 0, j = 0;
 
 		// try to win horizontal
-		// need to fix cause it tries not to lose before it tries to win
 		for (i = 0; i < board.length; i++) {
 			if (board[i][0] == board[i][1] && board[i][0] == symb1 && board[i][2] == ' ') {
 				result[0] = i;
@@ -185,7 +178,7 @@ public class tictactoe2 {
 		}
 
 		// try to win diagonal
-		// /
+		// upward
 		if (board[0][0] == board[1][1] && board[0][0] == symb1 && board[2][2] == ' ') {
 			result[0] = 2;
 			result[1] = 2;
@@ -202,7 +195,7 @@ public class tictactoe2 {
 			return result;
 		}
 
-		// \
+		// downward
 		if (board[0][2] == board[1][1] && board[0][2] == symb1 && board[2][0] == ' ') {
 			result[0] = 2;
 			result[1] = 0;
@@ -254,7 +247,7 @@ public class tictactoe2 {
 		}
 
 		// prevent player win diagonal
-		// upwards
+		// upward
 		if (board[0][0] == board[1][1] && board[0][0] == symb2 && board[2][2] == ' ') {
 			result[0] = 2;
 			result[1] = 2;
@@ -271,7 +264,7 @@ public class tictactoe2 {
 			return result;
 		}
 
-		// downwards
+		// downward
 		if (board[0][2] == board[1][1] && board[0][2] == symb2 && board[2][0] == ' ') {
 			result[0] = 2;
 			result[1] = 0;
@@ -289,66 +282,157 @@ public class tictactoe2 {
 		}
 
 		// other plays
-		// advance
-		for (i = 0; i < board.length; i++) {
+		// check corners to win on next turn
+		if (board[0][1] == symb1) {
+			if (board[1][0] == symb1 && board[0][0] == ' ' && board[0][2] == ' ' && board[2][0] == ' ') {
+				result[0] = 0;
+				result[1] = 0;
+				return result;
+			}
+
+			if (board[1][2] == symb1 && board[0][2] == ' ' && board[0][0] == ' ' && board[2][2] == ' ') {
+				result[0] = 0;
+				result[1] = 2;
+				return result;
+			}
+		}
+
+		if (board[2][1] == symb1) {
+			if (board[1][0] == symb1 && board[2][0] == ' ' && board[0][0] == ' ' && board[2][2] == ' ') {
+				result[0] = 2;
+				result[1] = 0;
+				return result;
+			}
+
+			if (board[1][2] == symb1 && board[2][2] == ' ' && board[0][2] == ' ' && board[2][0] == ' ') {
+				result[0] = 2;
+				result[1] = 2;
+				return result;
+			}
+		}
+
+		// if middle empty, check for wins on next turn
+		if (board[1][1] == ' ') {
+			if ((board[0][0] == symb1 && board[0][1] == symb1 && board[2][2] == ' ' && board[2][1] == ' ')
+					|| (board[0][1] == symb1 && board[0][2] == symb1 && board[2][0] == ' ' && board[2][1] == ' ')
+					|| (board[2][0] == symb1 && board[2][1] == symb1 && board[0][2] == ' ' && board[0][1] == ' ')
+					|| (board[2][1] == symb1 && board[2][2] == symb1 && board[0][0] == ' ' && board[0][1] == ' ')
+					|| (board[0][0] == symb1 && board[1][0] == symb1 && board[2][2] == ' ' && board[1][2] == ' ')
+					|| (board[1][0] == symb1 && board[2][0] == symb1 && board[0][2] == ' ' && board[1][2] == ' ')
+					|| (board[0][2] == symb1 && board[1][2] == symb1 && board[2][0] == ' ' && board[1][2] == ' ')
+					|| (board[1][2] == symb1 && board[2][2] == symb1 && board[0][0] == ' ' && board[1][2] == ' ')) {
+				result[0] = 1;
+				result[1] = 1;
+				return result;
+			}
+		}
+
+		// if symb1 is in the middle, check for wins on next turn
+		if (board[1][1] == symb1) {
+			// check corners first
+			// top left
+			if (board[0][0] == symb1 && board[0][1] == ' ' && board[0][2] == ' ' && board[2][1] == ' ') {
+				result[0] = 0;
+				result[1] = 1;
+				return result;
+			}
+			if (board[0][0] == symb1 && board[1][0] == ' ' && board[2][0] == ' ' && board[1][2] == ' ') {
+				result[0] = 1;
+				result[1] = 0;
+				return result;
+			}
+			// top right
+			if (board[0][2] == symb1 && board[0][1] == ' ' && board[0][0] == ' ' && board[2][1] == ' ') {
+				result[0] = 0;
+				result[1] = 1;
+				return result;
+			}
+			if (board[0][2] == symb1 && board[1][2] == ' ' && board[2][2] == ' ' && board[1][0] == ' ') {
+				result[0] = 1;
+				result[1] = 2;
+				return result;
+			}
+			// bottom left
+			if (board[2][0] == symb1 && board[1][0] == ' ' && board[0][0] == ' ' && board[1][2] == ' ') {
+				result[0] = 1;
+				result[1] = 0;
+				return result;
+			}
+			if (board[2][0] == symb1 && board[2][1] == ' ' && board[0][1] == ' ' && board[2][2] == ' ') {
+				result[0] = 2;
+				result[1] = 1;
+				return result;
+			}
+			// bottom right
+			if (board[2][2] == symb1 && board[1][2] == ' ' && board[0][2] == ' ' && board[1][0] == ' ') {
+				result[0] = 1;
+				result[1] = 2;
+				return result;
+			}
+			if (board[2][2] == symb1 && board[2][1] == ' ' && board[2][0] == ' ' && board[0][1] == ' ') {
+				result[0] = 2;
+				result[1] = 1;
+				return result;
+			}
+
+		}
+
+		int px = (int) Math.round(Math.random() * 2);
+		int py = (int) Math.round(Math.random() * 2);
+
+		// rounds 2 and 3 try to line up two symbols
+		for (i = 0; i < board.length && round != 1; i++) {
+			int attempt = 0;
 			for (j = 0; j < board[i].length; j++) {
-				if (board[i][j] == symb2) {
-					break;
-				}
-
-				if (board[i][j] == ' ') {
-					if (j == 0) {
-						result[0] = i;
-						if (board[i][1] == ' ')
-							result[1] = 1;
-						else if (board[i][2] == ' ')
-							result[1] = 2;
-						return result;
-					}
-
-					else if (j == 1) {
-						result[0] = i;
-						if (board[i][0] == ' ')
-							result[1] = 0;
-						else if (board[i][2] == ' ')
-							result[1] = 2;
-						return result;
-					} else if (j == 2) {
-						result[0] = i;
-						if (board[i][0] == ' ')
-							result[1] = 0;
-						else if (board[i][1] == ' ')
-							result[1] = 1;
-						return result;
-					}
-
-					// 2nd and 3rd plays
-					else {
-						int px = (int) Math.round(Math.random() * 2);
-						int py = (int) Math.round(Math.random() * 2);
-						while (board[px][py] == ' ') {
-							result[0] = px;
-							result[1] = py;
-							return result;
-						}
-					}
-				}
-			}
-		}
-
-		for (i = 0; i < board.length; i++) {
-			for (j = 1; j < board[i].length; j++) {
-				if (board[i][j] != ' ')
+				if (board[i][j] != symb1) {
 					continue;
-				else {
-					result[0] = i;
-					result[1] = j;
-					return result;
+				}
+
+				while (true) {
+					if (board[px][py] == ' ' &&
+					// same line play
+							((Math.abs(i - px) == 0 && Math.abs(j - py) == 1
+									&& ((board[i][0] == ' ' && board[i][1] == ' ')
+											|| (board[i][0] == ' ' && board[i][2] == ' ')
+											|| (board[i][1] == ' ' && board[i][2] == ' ')))
+									// same row play
+									|| (Math.abs(i - px) == 1 && Math.abs(j - py) == 0
+											&& ((board[0][j] == ' ' && board[1][j] == ' ')
+													|| (board[0][j] == ' ' && board[2][j] == ' ')
+													|| (board[1][j] == ' ' && board[2][j] == ' ')))
+									//form adjacent diagonal
+									|| (Math.abs(i - px) == 1 && Math.abs(j - py) == 1 && px == 1 && py == 1)
+									//play across board same line
+									|| (Math.abs(i - px) == 0 && Math.abs(j - py) == 2 && board[i][1] == ' ')
+									//play across board same row
+									|| (Math.abs(i - px) == 2 && Math.abs(j - py) == 0 && board[1][j] == ' ')
+									//play across board diagonal
+									|| (Math.abs(i - px) == 2 && Math.abs(j - py) == 2 && board[1][1] == ' '))) {
+						result[0] = px;
+						result[1] = py;
+						return result;
+					} else {
+						px = (int) Math.round(Math.random() * 2);
+						py = (int) Math.round(Math.random() * 2);
+						attempt++;
+						if (attempt >= 20)
+							break;
+					}
 				}
 			}
 		}
-		return result;
 
+		// for round 1 and other random plays, like round 2 if the AI plays second
+		while (true) {
+			if (board[px][py] == ' ') {
+				result[0] = px;
+				result[1] = py;
+				return result;
+			} else {
+				px = (int) Math.round(Math.random() * 2);
+				py = (int) Math.round(Math.random() * 2);
+			}
+		}
 	}
 
 	public static boolean gameover(char[][] board) {
@@ -374,7 +458,7 @@ public class tictactoe2 {
 			return true;
 		if (board[2][0] != ' ' && board[2][0] == board[1][1] && board[1][1] == board[0][2])
 			return true;
-		
+
 		return false;
 	}
 
