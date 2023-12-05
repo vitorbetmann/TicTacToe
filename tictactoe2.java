@@ -1,7 +1,5 @@
 import java.util.Scanner;
 
-//tem situaçao que ele poderia botar o symb numa casa pra dar 2 opçoes pra vitoria, mas ele nao faz
-
 public class tictactoe2 {
 	public static void main(String[] words) {
 
@@ -50,9 +48,9 @@ public class tictactoe2 {
 				System.out.println("You will play first. Good Luck!");
 
 			// game
-			while (!gameover(board)) {
+			while (!isVictory(board)) {
 				// draw condition
-				if (round == 10) {
+				if (round == 10 && !isVictory(board)) {
 					draw = true;
 					break;
 				}
@@ -247,7 +245,7 @@ public class tictactoe2 {
 		}
 
 		// prevent player win diagonal
-		// upward
+		// downwards
 		if (board[0][0] == board[1][1] && board[0][0] == symb2 && board[2][2] == ' ') {
 			result[0] = 2;
 			result[1] = 2;
@@ -264,7 +262,7 @@ public class tictactoe2 {
 			return result;
 		}
 
-		// downward
+		// upwards
 		if (board[0][2] == board[1][1] && board[0][2] == symb2 && board[2][0] == ' ') {
 			result[0] = 2;
 			result[1] = 0;
@@ -435,14 +433,14 @@ public class tictactoe2 {
 		}
 	}
 
-	public static boolean gameover(char[][] board) {
+	public static boolean isVictory(char[][] board) {
 
 		// horizontal
 		if (board[0][0] != ' ' && board[0][0] == board[0][1] && board[0][1] == board[0][2])
 			return true;
 		if (board[1][0] != ' ' && board[1][0] == board[1][1] && board[1][1] == board[1][2])
 			return true;
-		if (board[2][1] != ' ' && board[2][0] == board[2][1] && board[2][1] == board[2][2])
+		if (board[2][0] != ' ' && board[2][0] == board[2][1] && board[2][1] == board[2][2])
 			return true;
 
 		// vertical
